@@ -47,7 +47,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             [
             ''   
             , 'Camisetas'
-            , 'Motelom'
+            , 'Moletom'
             , 'Calças'
             , 'Camisas Sociais'
             , 'Sueters'
@@ -120,15 +120,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.limpar_campos()
         
-    
+    # ENVIANDO PRODUTO PARA O BANCO DE DADOS.
     def cadastro_prod(self):
         self.database.cadastrar_produto(
-            self.txt_sku_produto.text()
-            , self.txt_cnpj_fornecedor_02.text()
-            , self.cb_tipo.currentText()
-            , self.txt_produto.text()
-            , self.spin_custo.value()
-            , self.spin_preco.value()
+            self.txt_sku_produto.text() # PEGA O TEXTO DO PRODUTO;
+            , self.txt_cnpj_fornecedor_02.text() # PEGA O CNPJ DO FORNECEDOR;
+            , self.cb_tipo.currentText() # PEGA O TIPO DO PRODUTO;
+            , self.txt_produto.text() # PEGA O TIPO DO PRODUTO;
+            , self.spin_custo.value() # PEGA O CUSTO DO PRODUTO;
+            , self.spin_preco.value() # PEGA O PREÇO DE VENDA DO PRODUTO.
         )
         self.limpar_campos()
         
@@ -150,13 +150,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.txt_uf.setText('')
         self.txt_cep.setText('')
         self.txt_telefone.setText('')
-        self.txt_email.setText('')
-        self.txt_sku_produto.setText('')
-        self.txt_cnpj_fornecedor_02.setText('')
-        self.txt_produto.setText('')
-        self.spin_custo.setValue(0.00)
-        self.spin_preco.setValue(0.00)
-        self.cb_tipo.setCurrentIndex(0)
+        self.txt_email.setText('') 
+        self.txt_sku_produto.setText('') # LIMPANDO VALOR
+        self.txt_cnpj_fornecedor_02.setText('') # LIMPANDO VALOR
+        self.txt_produto.setText('') # LIMPANDO VALOR
+        self.spin_custo.setValue(0.00) # SETANDO PARA O NÚMERO 0 
+        self.spin_preco.setValue(0.00) # SETANDO PARA O NÚMERO 0
+        self.cb_tipo.setCurrentIndex(0) # SETANDO PARA O NÚMERO 0
 
 
 

@@ -7,7 +7,7 @@ class DataBase:
         self.con = odbc.connect(
            host='containers-us-west-114.railway.app',
            user='root',
-           password='Sq5fg8cBpkMOAgSYChMq',
+           password= senha,
            port='7626'
         )
 
@@ -26,10 +26,16 @@ class DataBase:
 
         
 
-    def cadastrar_produto(self, sku, fornecedor, tipo, produto, custo, preco_venda):
+    def cadastrar_produto(self, sku, fornecedor, tipo,
+                           produto, custo, preco_venda):
         query = f"""
         INSERT INTO S3.Produtos (sku, fornecedor, tipo, produto, custo, preco_venda)
-                 VALUES('{sku}', '{fornecedor}', '{tipo}', '{produto}', '{custo}', '{ preco_venda}')         
+                 VALUES('{sku}',
+                   '{fornecedor}',
+                   '{tipo}',
+                   '{produto}',
+                   '{custo}',
+                   '{ preco_venda}')         
         """
         cursor = self.con.cursor()
         cursor.execute(query)
