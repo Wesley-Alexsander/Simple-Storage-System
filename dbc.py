@@ -26,6 +26,17 @@ class DataBase:
 
         
 
+    def cadastrar_produto(self, sku, fornecedor, tipo, produto, custo, preco_venda):
+        query = f"""
+        INSERT INTO S3.Produtos (sku, fornecedor, tipo, produto, custo, preco_venda)
+                 VALUES('{sku}', '{fornecedor}', '{tipo}', '{produto}', '{custo}', '{ preco_venda}')         
+        """
+        cursor = self.con.cursor()
+        cursor.execute(query)
+        self.con.commit()
+        cursor.close()
+
+
 # con = odbc.connect(
 #             host='localhost',
 #             database='world',

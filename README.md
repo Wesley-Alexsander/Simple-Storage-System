@@ -8,7 +8,7 @@ A ideia é criar um sistema simples de gerenciamento de estoque para a plataform
 
 
 <p> 
-<img src="./Simple-Storage-System.PNG"/>
+<img src="./img/Simple-Storage-System.PNG"/>
 </p>
 <br/>
 

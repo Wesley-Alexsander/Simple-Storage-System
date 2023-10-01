@@ -18,6 +18,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Configurando botões menu
         self.btn_home_02.setChecked(True)
 
+        # Conex'ao banco 
+        self.database = dbc.DataBase()
         
 
         ########################################################################################
@@ -38,6 +40,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
         ########################################################################################
+        # CADASTRO DE FORNECEDORES:
+
+        # Lista de tipos de produtos
+        self.cb_tipo.addItems(
+            [
+            ''   
+            , 'Camisetas'
+            , 'Motelom'
+            , 'Calças'
+            , 'Camisas Sociais'
+            , 'Sueters'
+            , 'Calças Sociais'
+            , 'Blazers'
+            ] 
+        )
+        # Bloqueando item em banco (Não será possivel selecionar item em branco, após escolher um tipo)
+        self.cb_tipo.model().item(0).setEnabled(False)
         # Preenchimento automatioco
         self.txt_cnpj.editingFinished.connect(self.consulta_cnpj)
 
@@ -47,6 +66,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # limpar campos
         self.btn_limpar_fornecedor.clicked.connect(self.limpar_campos)
         ########################################################################################
+
+
+
+
+        ########################################################################################
+        # CADASTRO DE PRODUTOS:
+
+        # Cadastro de Produtos
+        self.btn_cadastrar_produto.clicked.connect(self.cadastro_prod)
+
+        # limpar campos
+        self.btn_limpar_produto.clicked.connect(self.limpar_campos)
+        ########################################################################################
+
+
+
+
+
+
+
 
     # Criando consulta de api CNPJ
     def consulta_cnpj(self):
@@ -67,12 +106,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.txt_email.setText(request[9])
 
     def registrar_empresa(self):
-        teste = dbc.DataBase()
-        teste.cadastrar_fornecedor(self.txt_nome.text(), self.txt_logradouro.text(), self.txt_numero.text(), 
-                                   self.txt_complemento.text(), self.txt_bairro.text(), self.txt_municipio.text(),
-                                     self.txt_uf.text(), self.txt_cep.text(), self.txt_telefone.text(), self.txt_email.text())
+        self.database.cadastrar_fornecedor(
+             self.txt_nome.text()
+            , self.txt_logradouro.text()
+            , self.txt_numero.text()
+            , self.txt_complemento.text()
+            , self.txt_bairro.text()
+            , self.txt_municipio.text()
+            , self.txt_uf.text()
+            , self.txt_cep.text()
+            , self.txt_telefone.text()
+            , self.txt_email.text()
+        )
         self.limpar_campos()
         
+    
+    def cadastro_prod(self):
+        self.database.cadastrar_produto(
+            self.txt_sku_produto.text()
+            , self.txt_cnpj_fornecedor_02.text()
+            , self.cb_tipo.currentText()
+            , self.txt_produto.text()
+            , self.spin_custo.value()
+            , self.spin_preco.value()
+        )
+        self.limpar_campos()
+        
+    
+    
+    
+    
+    # def combo_text(self, t):
+    #     return t
+    
     def limpar_campos(self):
         self.txt_cnpj.setText('')
         self.txt_nome.setText('')
@@ -85,7 +151,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.txt_cep.setText('')
         self.txt_telefone.setText('')
         self.txt_email.setText('')
-        
+        self.txt_sku_produto.setText('')
+        self.txt_cnpj_fornecedor_02.setText('')
+        self.txt_produto.setText('')
+        self.spin_custo.setValue(0.00)
+        self.spin_preco.setValue(0.00)
+        self.cb_tipo.setCurrentIndex(0)
 
 
 
