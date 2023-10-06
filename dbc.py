@@ -1,13 +1,13 @@
 import mysql.connector as odbc
 import pandas as pd
-
+import jsonify 
 
 class DataBase:
     def __init__(self):
         self.con = odbc.connect(
            host='containers-us-west-114.railway.app',
            user='root',
-           password= senha,
+           password='Sq5fg8cBpkMOAgSYChMq',
            port='7626'
         )
 
@@ -26,21 +26,40 @@ class DataBase:
 
         
 
-    def cadastrar_produto(self, sku, fornecedor, tipo,
-                           produto, custo, preco_venda):
+    def cadastrar_produto(self, sku, fornecedor, tipo, produto, custo, preco_venda):
         query = f"""
         INSERT INTO S3.Produtos (sku, fornecedor, tipo, produto, custo, preco_venda)
-                 VALUES('{sku}',
-                   '{fornecedor}',
-                   '{tipo}',
-                   '{produto}',
-                   '{custo}',
-                   '{ preco_venda}')         
+                 VALUES('{sku}', '{fornecedor}', '{tipo}', '{produto}', '{custo}', '{ preco_venda}')         
         """
         cursor = self.con.cursor()
         cursor.execute(query)
         self.con.commit()
         cursor.close()
+
+    def pesquisa_sku(self, sku):
+        query = f"""
+        select * from S3.Produtos where sku = '{sku}'
+        """
+
+        cursor = self.con.cursor()
+        cursor.execute(query)
+        resultado = cursor.fetchone()
+        print(resultado)
+        return resultado
+        #return jsonify(resultado)
+        
+    def registrar_entrada(self, sku, produto, tipo, tamanho, quantidade):
+        query = f"""
+        INSERT INTO S3.Estoque (sku, produto, tipo, tamanho, quantidade)
+                 VALUES('{sku}', '{produto}', '{tipo}', '{tamanho}', '{quantidade}')         
+        """
+        cursor = self.con.cursor()
+        cursor.execute(query)
+        self.con.commit()
+        cursor.close()
+
+
+
 
 
 # con = odbc.connect(

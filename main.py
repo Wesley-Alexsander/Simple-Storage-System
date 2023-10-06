@@ -47,7 +47,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             [
             ''   
             , 'Camisetas'
-            , 'Moletom'
+            , 'Motelom'
             , 'Calças'
             , 'Camisas Sociais'
             , 'Sueters'
@@ -68,8 +68,59 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         ########################################################################################
 
 
+                
 
 
+
+        ########################################################################################
+        # ENTRADA DE PRODUTOS:
+        self.txt_sku_entrada.setPlaceholderText('Insira o Sku')
+        self.txt_tipo_entrada.setPlaceholderText('Tipo do Produto')
+        self.txt_nome_entrada.setPlaceholderText('Insira o nome Produto')
+        self.cb_tamanho_entrada.setPlaceholderText('Tamanhos')
+        
+
+        self.cb_tamanho_entrada.addItems(
+                [
+                ''
+                , 'PP'
+                , 'P'
+                , 'M'
+                , 'G'
+                , 'GG'
+                , 'EXG'
+                , 'EXGG'
+                , '-------------------------------'
+                , '36'
+                , '38'
+                , '40'
+                , '42'
+                , '44'
+                , '46'
+                , '48'
+                , '50'
+                , '52'
+                ]   
+            )
+        # Bloqueando item em banco (Não será possivel selecionar item em branco, após escolher um tipo)
+        self.cb_tamanho_entrada.model().item(0).setEnabled(False)
+        self.cb_tamanho_entrada.model().item(8).setEnabled(False)
+
+        # Depois de digitar o sku e pressionar ENTER, irá preencher os campos
+        self.txt_sku_entrada.editingFinished.connect(self.preencher_entrada)
+        
+        # Botão cadastrar
+        self.btn_cadastrar_entrada.clicked.connect(self.entrada_produtos)
+
+        # Botão limpar
+        self.btn_limpar_entrada.clicked.connect(self.limpar_campos)
+
+
+        ########################################################################################
+
+
+
+        
         ########################################################################################
         # CADASTRO DE PRODUTOS:
 
@@ -83,7 +134,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
 
-
+        
 
 
 
@@ -120,22 +171,39 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.limpar_campos()
         
-    # ENVIANDO PRODUTO PARA O BANCO DE DADOS.
+    
     def cadastro_prod(self):
         self.database.cadastrar_produto(
-            self.txt_sku_produto.text() # PEGA O TEXTO DO PRODUTO;
-            , self.txt_cnpj_fornecedor_02.text() # PEGA O CNPJ DO FORNECEDOR;
-            , self.cb_tipo.currentText() # PEGA O TIPO DO PRODUTO;
-            , self.txt_produto.text() # PEGA O TIPO DO PRODUTO;
-            , self.spin_custo.value() # PEGA O CUSTO DO PRODUTO;
-            , self.spin_preco.value() # PEGA O PREÇO DE VENDA DO PRODUTO.
+            self.txt_sku_produto.text()
+            , self.txt_cnpj_fornecedor_02.text()
+            , self.cb_tipo.currentText()
+            , self.txt_produto.text()
+            , self.spin_custo.value()
+            , self.spin_preco.value()
         )
         self.limpar_campos()
-        
+
+
+
     
     
-    
-    
+    def preencher_entrada(self):
+        tupla = self.database.pesquisa_sku(self.txt_sku_entrada.text())
+        self.txt_tipo_entrada.setText(tupla[2])
+        self.txt_nome_entrada.setText(tupla[3])
+
+    def entrada_produtos(self):
+        self.database.registrar_entrada(
+            self.txt_sku_entrada.text()
+            , self.txt_nome_entrada.text()
+            , self.txt_tipo_entrada.text()
+            , self.cb_tamanho_entrada.currentText()
+            , self.spin_quantidade.value()
+        )
+        self.limpar_campos()
+
+
+
     # def combo_text(self, t):
     #     return t
     
@@ -150,15 +218,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.txt_uf.setText('')
         self.txt_cep.setText('')
         self.txt_telefone.setText('')
-        self.txt_email.setText('') 
-        self.txt_sku_produto.setText('') # LIMPANDO VALOR
-        self.txt_cnpj_fornecedor_02.setText('') # LIMPANDO VALOR
-        self.txt_produto.setText('') # LIMPANDO VALOR
-        self.spin_custo.setValue(0.00) # SETANDO PARA O NÚMERO 0 
-        self.spin_preco.setValue(0.00) # SETANDO PARA O NÚMERO 0
-        self.cb_tipo.setCurrentIndex(0) # SETANDO PARA O NÚMERO 0
-
-
+        self.txt_email.setText('')
+        self.txt_sku_produto.setText('')
+        self.txt_cnpj_fornecedor_02.setText('')
+        self.txt_produto.setText('')
+        self.spin_custo.setValue(0.00)
+        self.spin_preco.setValue(0.00)
+        self.cb_tipo.setCurrentIndex(0)
+        self.txt_sku_entrada.setText('')
+        self.txt_nome_entrada.setText('')
+        self.txt_tipo_entrada.setText('')
+        self.cb_tamanho_entrada.setCurrentIndex(0)
+        self.spin_quantidade.setValue(0)
+    
 
 
 if __name__ == '__main__':

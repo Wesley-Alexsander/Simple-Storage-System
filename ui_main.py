@@ -808,6 +808,7 @@ class Ui_MainWindow(object):
 
         self.spin_custo = QDoubleSpinBox(self.frame_3)
         self.spin_custo.setObjectName(u"spin_custo")
+        self.spin_custo.setMaximum(1000)
 
         self.verticalLayout_16.addWidget(self.spin_custo)
 
@@ -853,6 +854,7 @@ class Ui_MainWindow(object):
 
         self.spin_preco = QDoubleSpinBox(self.frame_3)
         self.spin_preco.setObjectName(u"spin_preco")
+        self.spin_preco.setMaximum(1000)
 
         self.verticalLayout_17.addWidget(self.spin_preco)
 
