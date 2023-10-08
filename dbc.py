@@ -1,14 +1,13 @@
 import mysql.connector as odbc
 import pandas as pd
-import jsonify 
 
 class DataBase:
     def __init__(self):
         self.con = odbc.connect(
-           host='containers-us-west-114.railway.app',
+           host='containers-us-west-181.railway.app',
            user='root',
-           password='Sq5fg8cBpkMOAgSYChMq',
-           port='7626'
+           password='eoH0slm17YocwGJu1PXw',
+           port='7079'
         )
 
     
@@ -49,14 +48,34 @@ class DataBase:
         #return jsonify(resultado)
         
     def registrar_entrada(self, sku, produto, tipo, tamanho, quantidade):
-        query = f"""
-        INSERT INTO S3.Estoque (sku, produto, tipo, tamanho, quantidade)
-                 VALUES('{sku}', '{produto}', '{tipo}', '{tamanho}', '{quantidade}')         
-        """
         cursor = self.con.cursor()
-        cursor.execute(query)
-        self.con.commit()
-        cursor.close()
+
+        sku_exist = f"""
+             select * from S3.Estoque where sku = '{sku}'  and tamanho = '{tamanho}' 
+        """
+        cursor.execute(sku_exist)
+        exist = cursor.fetchone()
+
+        if not(exist):    
+            query = f"""
+            INSERT INTO S3.Estoque (sku, produto, tipo, tamanho, quantidade)
+                 VALUES('{sku}', '{produto}', '{tipo}', '{tamanho}', '{quantidade}')         
+            """
+            cursor.execute(query) 
+            self.con.commit()
+            cursor.close()
+        else:
+            query = f"""
+                update S3.Estoque 
+                set quantidade = quantidade + {quantidade} 
+                where sku = '{sku}'  and tamanho = '{tamanho}' 
+            """
+            cursor.execute(query) 
+            self.con.commit()
+            cursor.close()
+        
+
+        
 
 
 
