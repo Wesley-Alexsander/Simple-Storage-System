@@ -1,15 +1,29 @@
 import mysql.connector as odbc
 import pandas as pd
 
+class Conexao:
+    def __init__(self) -> None:
+        pass
+
+    def connection(self):
+        con = odbc.connect(
+           host='roundhouse.proxy.rlwy.net',
+           user='root',
+           password='Ef32eAF4eeB61hdAeG3E1d12dgAC4FE-',
+           port='57795'
+        )
+        return con
+        
+
 class DataBase:
     def __init__(self):
         self.con = odbc.connect(
-           host='containers-us-west-181.railway.app',
+           host='roundhouse.proxy.rlwy.net',
            user='root',
-           password='eoH0slm17YocwGJu1PXw',
-           port='7079'
+           password='Ef32eAF4eeB61hdAeG3E1d12dgAC4FE-',
+           port='57795'
         )
-
+        
     
     def cadastrar_fornecedor(self, nome, logradouro, numero, 
                              complemento, bairro, municipio, uf, cep, telefone, email):
@@ -17,7 +31,7 @@ class DataBase:
         query = f"""
         INSERT INTO S3.Fornecedor(nome, logradouro, numero, complemento, bairro, municipio, uf, cep, telefone, email)
                  VALUES('{nome}', '{logradouro}', '{numero}', '{complemento}', '{bairro}', '{municipio}', '{uf}', '{cep}', '{telefone}', '{email}')         
-        """
+        """                                  
         cursor = self.con.cursor()
         cursor.execute(query)
         self.con.commit()
@@ -75,8 +89,23 @@ class DataBase:
             cursor.close()
         
 
-        
+class Estoque:
+    def __init__(self):
+        connection = Conexao()
+        self.con = connection.connection()
 
+
+    def registrar_saida(self, sku, produto, tipo, tamanho, quantidade):
+        query = f"""
+            update S3.Estoque
+            set quantidade = quantidade - {quantidade}
+            where sku = '{sku}' and tamanho = '{tamanho}'
+        """
+
+        cursor = self.con.cursor()
+        cursor.execute(query)
+        self.con.commit()
+        cursor.close()
 
 
 

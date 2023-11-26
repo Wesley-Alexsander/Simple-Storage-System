@@ -20,6 +20,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         # Conex'ao banco 
         self.database = dbc.DataBase()
+
+        # Conex'ao banco 
+        self.Estoque = dbc.Estoque()
         
 
         ########################################################################################
@@ -120,6 +123,53 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
 
+
+       ########################################################################################
+        # SAIDA DE PRODUTOS:
+        self.txt_sku_entrada.setPlaceholderText('Insira o Sku')
+        self.txt_tipo_entrada.setPlaceholderText('Tipo do Produto')
+        self.txt_nome_entrada.setPlaceholderText('Insira o nome Produto')
+        self.cb_tamanho_2.setPlaceholderText('Tamanhos')
+        
+
+        self.cb_tamanho_2.addItems(
+                [
+                ''
+                , 'PP'
+                , 'P'
+                , 'M'
+                , 'G'
+                , 'GG'
+                , 'EXG'
+                , 'EXGG'
+                , '-------------------------------'
+                , '36'
+                , '38'
+                , '40'
+                , '42'
+                , '44'
+                , '46'
+                , '48'
+                , '50'
+                , '52'
+                ]   
+            )
+        # Bloqueando item em banco (Não será possivel selecionar item em branco, após escolher um tipo)
+        self.cb_tamanho_2.model().item(0).setEnabled(False)
+        self.cb_tamanho_2.model().item(8).setEnabled(False)
+
+        # Depois de digitar o sku e pressionar ENTER, irá preencher os campos
+        self.txt_sku_saida.editingFinished.connect(self.preencher_saida)
+        
+        # Botão cadastrar 
+        self.btn_cadastrar_saida.clicked.connect(self.saida_produtos) 
+
+        # Botão limpar
+        self.btn_limpar_saida.clicked.connect(self.limpar_campos)
+
+
+        ########################################################################################
+
         
         ########################################################################################
         # CADASTRO DE PRODUTOS:
@@ -192,6 +242,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.txt_tipo_entrada.setText(tupla[2])
         self.txt_nome_entrada.setText(tupla[3])
 
+
+    def preencher_saida(self):
+        tupla = self.database.pesquisa_sku(self.txt_sku_saida.text())
+        self.txt_tipo_saida.setText(tupla[2])
+        self.txt_nome_saida.setText(tupla[3])    
+
     def entrada_produtos(self):
         self.database.registrar_entrada(
             self.txt_sku_entrada.text()
@@ -202,6 +258,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         )
         self.limpar_campos()
 
+    def saida_produtos(self):
+        self.Estoque.registrar_saida(
+            self.txt_sku_saida.text()
+            , self.txt_nome_saida.text()
+            , self.txt_tipo_saida.text()
+            , self.cb_tamanho_2.currentText()
+            , self.spin_quantidade_saida.value()
+        ) 
+        self.limpar_campos()
 
 
     # def combo_text(self, t):
@@ -230,6 +295,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.txt_tipo_entrada.setText('')
         self.cb_tamanho_entrada.setCurrentIndex(0)
         self.spin_quantidade.setValue(0)
+        self.txt_sku_saida.setText('')
+        self.txt_nome_saida.setText('')
+        self.txt_tipo_saida.setText('')
+        self.cb_tamanho_2.setCurrentIndex(0)
+        self.spin_quantidade_saida.setValue(0)
     
 
 
