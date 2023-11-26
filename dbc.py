@@ -1,7 +1,7 @@
 import mysql.connector as odbc
 import pandas as pd
 
-class Conexao:
+class DataBase:
     def __init__(self) -> None:
         pass
 
@@ -15,15 +15,10 @@ class Conexao:
         return con
         
 
-class DataBase:
+class Fornecedor:
     def __init__(self):
-        self.con = odbc.connect(
-           host='roundhouse.proxy.rlwy.net',
-           user='root',
-           password='Ef32eAF4eeB61hdAeG3E1d12dgAC4FE-',
-           port='57795'
-        )
-        
+        connection = DataBase()
+        self.con = connection.connection()
     
     def cadastrar_fornecedor(self, nome, logradouro, numero, 
                              complemento, bairro, municipio, uf, cep, telefone, email):
@@ -37,7 +32,15 @@ class DataBase:
         self.con.commit()
         cursor.close()
 
+    # Implementação futura
+    def excluir_fornecedor():
+        pass
+
         
+class Produto:
+    def __init__(self):
+        connection = DataBase()
+        self.con = connection.connection()
 
     def cadastrar_produto(self, sku, fornecedor, tipo, produto, custo, preco_venda):
         query = f"""
@@ -49,6 +52,12 @@ class DataBase:
         self.con.commit()
         cursor.close()
 
+    # Implementação futura
+    def excluir_Produto():
+        pass
+
+
+class PesquisarProdutos:
     def pesquisa_sku(self, sku):
         query = f"""
         select * from S3.Produtos where sku = '{sku}'
@@ -61,6 +70,14 @@ class DataBase:
         return resultado
         #return jsonify(resultado)
         
+
+        
+
+class AtualizarEstoque:
+    def __init__(self):
+        connection = DataBase()
+        self.con = connection.connection()
+
     def registrar_entrada(self, sku, produto, tipo, tamanho, quantidade):
         cursor = self.con.cursor()
 
@@ -87,12 +104,6 @@ class DataBase:
             cursor.execute(query) 
             self.con.commit()
             cursor.close()
-        
-
-class Estoque:
-    def __init__(self):
-        connection = Conexao()
-        self.con = connection.connection()
 
 
     def registrar_saida(self, sku, produto, tipo, tamanho, quantidade):
@@ -112,7 +123,7 @@ class Estoque:
 
 # con = odbc.connect(
 #             host='localhost',
-#             database='world',
+#             Fornecedor='world',
 #             user='root',
 #             password='@Wess-3705',
 #             auth_plugin='mysql_native_password'

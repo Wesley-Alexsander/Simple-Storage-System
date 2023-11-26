@@ -18,11 +18,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Configurando botões menu
         self.btn_home_02.setChecked(True)
 
-        # Conex'ao banco 
+        # Conexao banco 
         self.database = dbc.DataBase()
 
-        # Conex'ao banco 
-        self.Estoque = dbc.Estoque()
+        # Instanciando Classe Fornecedor
+        self.Fornecedor = dbc.Fornecedor()
+
+        # Instanciando Classe Produto
+        self.Produto = dbc.Produto()
+
+        # Instanciando Classe AtualizarEstoque
+        self.AtualizarEstoque = dbc.AtualizarEstoque()
+
+        # Instanciando Classe AtualizarEstoque
+        self.Pesquisar_Produtos = dbc.PesquisarProdutos()
+        
+        
         
 
         ########################################################################################
@@ -207,7 +218,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.txt_email.setText(request[9])
 
     def registrar_empresa(self):
-        self.database.cadastrar_fornecedor(
+        self.Fornecedor.cadastrar_fornecedor(
              self.txt_nome.text()
             , self.txt_logradouro.text()
             , self.txt_numero.text()
@@ -223,7 +234,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         
     
     def cadastro_prod(self):
-        self.database.cadastrar_produto(
+        self.Produto.cadastrar_produto(
             self.txt_sku_produto.text()
             , self.txt_cnpj_fornecedor_02.text()
             , self.cb_tipo.currentText()
@@ -238,18 +249,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     
     def preencher_entrada(self):
-        tupla = self.database.pesquisa_sku(self.txt_sku_entrada.text())
+        tupla = self.Pesquisar_Produtos.pesquisa_sku(self.txt_sku_entrada.text())
         self.txt_tipo_entrada.setText(tupla[2])
         self.txt_nome_entrada.setText(tupla[3])
 
 
     def preencher_saida(self):
-        tupla = self.database.pesquisa_sku(self.txt_sku_saida.text())
+        tupla = self.Pesquisar_Produtos.pesquisa_sku(self.txt_sku_saida.text())
         self.txt_tipo_saida.setText(tupla[2])
         self.txt_nome_saida.setText(tupla[3])    
 
     def entrada_produtos(self):
-        self.database.registrar_entrada(
+        self.AtualizarEstoque.registrar_entrada(
             self.txt_sku_entrada.text()
             , self.txt_nome_entrada.text()
             , self.txt_tipo_entrada.text()
@@ -259,7 +270,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.limpar_campos()
 
     def saida_produtos(self):
-        self.Estoque.registrar_saida(
+        self.AtualizarEstoque.registrar_saida(
             self.txt_sku_saida.text()
             , self.txt_nome_saida.text()
             , self.txt_tipo_saida.text()
