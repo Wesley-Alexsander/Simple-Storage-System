@@ -17,8 +17,8 @@ class DataBase:
 
 class Fornecedor:
     def __init__(self):
-        connection = DataBase()
-        self.con = connection.connection()
+        banco = DataBase()
+        self.con = banco.connection()
     
     def cadastrar_fornecedor(self, nome, logradouro, numero, 
                              complemento, bairro, municipio, uf, cep, telefone, email):
@@ -39,8 +39,8 @@ class Fornecedor:
         
 class Produto:
     def __init__(self):
-        connection = DataBase()
-        self.con = connection.connection()
+        banco = DataBase()
+        self.con = banco.connection()
 
     def cadastrar_produto(self, sku, fornecedor, tipo, produto, custo, preco_venda):
         query = f"""
@@ -58,6 +58,11 @@ class Produto:
 
 
 class PesquisarProdutos:
+
+    def __init__(self) -> None:
+        banco = DataBase()
+        self.con = banco.connection()
+
     def pesquisa_sku(self, sku):
         query = f"""
         select * from S3.Produtos where sku = '{sku}'
@@ -75,8 +80,8 @@ class PesquisarProdutos:
 
 class AtualizarEstoque:
     def __init__(self):
-        connection = DataBase()
-        self.con = connection.connection()
+        banco = DataBase()
+        self.con = banco.connection()
 
     def registrar_entrada(self, sku, produto, tipo, tamanho, quantidade):
         cursor = self.con.cursor()
@@ -86,8 +91,8 @@ class AtualizarEstoque:
         """
         cursor.execute(sku_exist)
         exist = cursor.fetchone()
-
-        if not(exist):    
+         
+        if not(exist) and tamanho != '':    
             query = f"""
             INSERT INTO S3.Estoque (sku, produto, tipo, tamanho, quantidade)
                  VALUES('{sku}', '{produto}', '{tipo}', '{tamanho}', '{quantidade}')         
@@ -107,16 +112,33 @@ class AtualizarEstoque:
 
 
     def registrar_saida(self, sku, produto, tipo, tamanho, quantidade):
-        query = f"""
-            update S3.Estoque
-            set quantidade = quantidade - {quantidade}
-            where sku = '{sku}' and tamanho = '{tamanho}'
-        """
-
         cursor = self.con.cursor()
-        cursor.execute(query)
-        self.con.commit()
-        cursor.close()
+        value_from = f"""
+             select * from S3.Estoque where sku = '{sku}' and tamanho = '{tamanho}' 
+        """
+        cursor.execute(value_from)
+        value = cursor.fetchone()
+        
+        if (value[4] - quantidade) > 0:
+            query = f"""
+                update S3.Estoque
+                set quantidade = quantidade - {quantidade}
+                where sku = '{sku}' and tamanho = '{tamanho}'
+            """
+            cursor.execute(query)
+            self.con.commit()
+            cursor.close()
+        else:
+            query = f"""
+                update S3.Estoque
+                set quantidade = 0
+                where sku = '{sku}' and tamanho = '{tamanho}'
+            """
+            cursor.execute(query)
+            self.con.commit()
+            cursor.close()
+       
+        
 
 
 
