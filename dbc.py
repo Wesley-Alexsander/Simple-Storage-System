@@ -15,7 +15,7 @@ class DataBase:
         return con
         
 
-class Fornecedor:
+class CadastrarFornecedor:
     def __init__(self):
         banco = DataBase()
         self.con = banco.connection()
@@ -37,7 +37,7 @@ class Fornecedor:
         pass
 
         
-class Produto:
+class CadastrarProduto:
     def __init__(self):
         banco = DataBase()
         self.con = banco.connection()
@@ -118,7 +118,7 @@ class AtualizarEstoque:
         """
         cursor.execute(value_from)
         value = cursor.fetchone()
-        
+
         if (value[4] - quantidade) > 0:
             query = f"""
                 update S3.Estoque

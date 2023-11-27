@@ -22,10 +22,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.database = dbc.DataBase()
 
         # Instanciando Classe Fornecedor
-        self.Fornecedor = dbc.Fornecedor()
+        self.Fornecedor = dbc.CadastrarFornecedor()
 
         # Instanciando Classe Produto
-        self.Produto = dbc.Produto()
+        self.Produto = dbc.CadastrarProduto()
 
         # Instanciando Classe AtualizarEstoque
         self.AtualizarEstoque = dbc.AtualizarEstoque()
